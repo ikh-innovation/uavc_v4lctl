@@ -1,0 +1,11 @@
+<launch>
+
+  <arg name="device" default="/dev/video0" />
+  <arg name="yaml" default="$(find uavc_v4lctl)/yaml/video0.yaml" />
+
+  <node pkg="uavc_v4lctl" type="v4lctl" name="v4lctl" output="screen">
+    <param name="device" value="$(arg device)" />
+    <param name="yaml" value="$(arg yaml)" />
+  </node>
+
+</launch>

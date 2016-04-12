@@ -1,0 +1,16 @@
+%YAML:1.0
+bright: "50%"
+color: "66%"
+contrast: "78%"
+hue: "50%"
+setattr_-AGC_Crush-: on
+setattr_-Chroma_AGC-: off
+setattr_-Color_Killer-: off
+setattr_-Full_Luma_Range-: off
+setattr_-Luma_Decimation_Filter-: off
+setattr_-UV_Ratio-: "50%"
+setattr_-VCR_Hack-: off
+setattr_-Whitecrush_Lower-: "50%"
+setattr_-Whitecrush_Upper-: "80%"
+setattr_Coring: "0"
+setattr_mute: off
