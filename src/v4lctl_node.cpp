@@ -1,10 +1,11 @@
-/**
-  @file v4lctl_node.cpp
-  @date 10.04.2016
-  @author Patrick Feuser
-  @license GNU GPLv3
+/*
+  File: v4lctl_node.cpp
+  Date: 10.04.2016
+  Author: Patrick Feuser
+  Copyrights: 2016 UAV-Concept http://uav-concept.com
+  License: GNU GPLv3
 
-  This ROS node is a wrapper for the v4lctl tool.
+  This ROS node is a wrapper for the v4lctl command line tool.
   It provides two services to set or get particular bttv parameter.
   If a yaml file will be provided a save and restore capability will be enabled.
   Parameter are then loaded and set automatically in the capture card when starting the node.
@@ -120,14 +121,14 @@ public:
 
     if (!yaml_.empty() && fs.open(yaml_, cv::FileStorage::WRITE))
     {
-      std::map<std::string, std::string>::iterator itter = fs_map_.begin();
+      std::map<std::string, std::string>::iterator it = fs_map_.begin();
 
-      while (itter != fs_map_.end())
+      while (it != fs_map_.end())
       {
-        std::string key = (*itter).first;
+        std::string key = (*it).first;
 
         fs << key << fs_map_[key];
-        itter++;
+        it++;
       }
     }
   }
@@ -141,15 +142,17 @@ public:
 
     ss << "v4lctl -c " << device_ << " show \"" << name << "\"";
 
-    ROS_INFO_STREAM("Call: " << ss.str());
-
     if ((pipe=popen(ss.str().c_str(), "r")))
     {
       if (fgets(stdout, sizeof(stdout), pipe))
-        result = boost::regex_replace(std::string(stdout), boost::regex("^" + name + ": ([a-zA-Z0-9]+).*"), "$1");
+        result = boost::regex_replace(std::string(stdout), boost::regex("^" + name + ": ([a-zA-Z0-9\\-]+).*"), "$1");
+
+      ROS_INFO_STREAM("Call '" << ss.str() << "' Result: " << result);
 
       pclose(pipe);
     }
+    else
+      ROS_ERROR_STREAM("Call failed '" << ss.str() << "'");
 
     return result;
   }
@@ -161,7 +164,7 @@ public:
 
     ss << "v4lctl -c " << device_ << " " << name << " " << value;
 
-    ROS_INFO_STREAM("Call: " << ss.str());
+    ROS_INFO_STREAM("Call '" << ss.str() << "'");
 
     if ((result=std::system(ss.str().c_str())) > -1)
       fs_map_[YAML_OPT_TO_NAME(name)] = value;
@@ -190,27 +193,30 @@ public:
   {
     std::string s;
 
-#define v4lctl_GET_PERCENT(name,default,max) (defaults || (s=v4lctlGet(name)).empty() ? default : (atoi(s.c_str()) * 100 / max))
-#define v4lctl_GET_BOOL(name,default)        (defaults || (s=v4lctlGet(name)).empty() ? default : boost::regex_match(s, boost::regex("^on\$")))
-#define v4lctl_GET_INT(name,default)         (defaults || (s=v4lctlGet(name)).empty() ? default : atoi(s.c_str()))
+#define V4LCTL_GET_PERCENT(name,default,max) (defaults || (s=v4lctlGet(name)).empty() ? default : (atoi(s.c_str()) * 100 / max))
+#define V4LCTL_GET_BOOL(name,default)        (defaults || (s=v4lctlGet(name)).empty() ? default : boost::regex_match(s, boost::regex("^on\$")))
+#define V4LCTL_GET_INT(name,default)         (defaults || (s=v4lctlGet(name)).empty() ? default : atoi(s.c_str()))
+#define V4LCTL_GET_STRING(name,default)      (defaults || (s=v4lctlGet(name)).empty() ? default : s)
 
-    config.bright           = v4lctl_GET_PERCENT("bright",             50, 65280);
-    config.contrast         = v4lctl_GET_PERCENT("contrast",           40, 65280);
-    config.color            = v4lctl_GET_PERCENT("color",              50, 65280);
-    config.hue              = v4lctl_GET_PERCENT("hue",                50, 65280);
-    config.UV_Ratio         = v4lctl_GET_INT    ("UV Ratio",                  50);
-    config.Coring           = v4lctl_GET_INT    ("Coring",                     0);
-    config.Whitecrush_Lower = v4lctl_GET_PERCENT("Whitecrush Lower",     50, 255);
-    config.Whitecrush_Upper = v4lctl_GET_PERCENT("Whitecrush Upper",     80, 255);
-    config.mute             = v4lctl_GET_BOOL   ("mute",                   false);
-    config.Chroma_AGC       = v4lctl_GET_BOOL   ("Chroma AGC",             false);
-    config.Color_Killer     = v4lctl_GET_BOOL   ("Color Killer",           false);
-    config.Comb_Filter      = v4lctl_GET_BOOL   ("Comb Filter",            false);
-    config.Auto_Mute        = v4lctl_GET_BOOL   ("Auto Mute",               true);
-    config.Luma_Decim       = v4lctl_GET_BOOL   ("Luma Decimation Filter", false);
-    config.AGC_Crush        = v4lctl_GET_BOOL   ("AGC Crush",               true);
-    config.VCR_Hack         = v4lctl_GET_BOOL   ("VCR Hack",               false);
-    config.Full_Luma        = v4lctl_GET_BOOL   ("Full Luma Range",        false);
+    config.input            = V4LCTL_GET_STRING ("input",           "Composite0");
+    config.norm             = V4LCTL_GET_STRING ("norm",                 "PAL-I");
+    config.bright           = V4LCTL_GET_PERCENT("bright",             50, 65280);
+    config.contrast         = V4LCTL_GET_PERCENT("contrast",           40, 65280);
+    config.color            = V4LCTL_GET_PERCENT("color",              50, 65280);
+    config.hue              = V4LCTL_GET_PERCENT("hue",                50, 65280);
+    config.UV_Ratio         = V4LCTL_GET_INT    ("UV Ratio",                  50);
+    config.Coring           = V4LCTL_GET_INT    ("Coring",                     0);
+    config.Whitecrush_Lower = V4LCTL_GET_PERCENT("Whitecrush Lower",     50, 255);
+    config.Whitecrush_Upper = V4LCTL_GET_PERCENT("Whitecrush Upper",     80, 255);
+    config.mute             = V4LCTL_GET_BOOL   ("mute",                   false);
+    config.Chroma_AGC       = V4LCTL_GET_BOOL   ("Chroma AGC",             false);
+    config.Color_Killer     = V4LCTL_GET_BOOL   ("Color Killer",           false);
+    config.Comb_Filter      = V4LCTL_GET_BOOL   ("Comb Filter",            false);
+    config.Auto_Mute        = V4LCTL_GET_BOOL   ("Auto Mute",               true);
+    config.Luma_Decim       = V4LCTL_GET_BOOL   ("Luma Decimation Filter", false);
+    config.AGC_Crush        = V4LCTL_GET_BOOL   ("AGC Crush",               true);
+    config.VCR_Hack         = V4LCTL_GET_BOOL   ("VCR Hack",               false);
+    config.Full_Luma        = V4LCTL_GET_BOOL   ("Full Luma Range",        false);
   }
 
   void configCb(v4lctlNodeDynConfig &config, int level)
@@ -225,11 +231,14 @@ public:
       return;
     }
 
-    if (config.Set_Defaults != cfg_.Set_Defaults)
+    if (config.Set_Defaults)
     {
       initConfig(config, true);
       config.Set_Defaults = false;
     }
+
+    if (config.input != cfg_.input)
+       v4lctlSet("setattr input", config.input);
 
     if (config.norm != cfg_.norm)
        v4lctlSet("setnorm", config.norm);
