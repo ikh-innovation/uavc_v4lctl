@@ -238,10 +238,10 @@ public:
     }
 
     if (config.input != cfg_.input)
-       v4lctlSet("setattr input", config.input);
+      v4lctlSet("setattr input", config.input);
 
     if (config.norm != cfg_.norm)
-       v4lctlSet("setnorm", config.norm);
+      v4lctlSet("setnorm", config.norm);
 
     if (config.bright != cfg_.bright)
       v4lctlSet("bright", std::to_string(config.bright)+"%");
