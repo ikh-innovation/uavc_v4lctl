@@ -244,28 +244,28 @@ public:
       v4lctlSet("setnorm", config.norm);
 
     if (config.bright != cfg_.bright)
-      v4lctlSet("bright", std::to_string(config.bright)+"%");
+      v4lctlSet("bright", std::to_string(config.bright)+'%');
 
     if (config.contrast != cfg_.contrast)
-      v4lctlSet("contrast", std::to_string(config.contrast)+"%");
+      v4lctlSet("contrast", std::to_string(config.contrast)+'%');
 
     if (config.color != cfg_.color)
-      v4lctlSet("color", std::to_string(config.color)+"%");
+      v4lctlSet("color", std::to_string(config.color)+'%');
 
     if (config.hue != cfg_.hue)
-      v4lctlSet("hue", std::to_string(config.hue)+"%");
+      v4lctlSet("hue", std::to_string(config.hue)+'%');
 
     if (config.UV_Ratio != cfg_.UV_Ratio)
-      v4lctlSet("setattr \"UV Ratio\"", std::to_string(config.UV_Ratio)+"%");
+      v4lctlSet("setattr \"UV Ratio\"", std::to_string(config.UV_Ratio)+'%');
 
     if (config.Coring != cfg_.Coring)
       v4lctlSet("setattr Coring", std::to_string(config.Coring));
 
     if (config.Whitecrush_Lower != cfg_.Whitecrush_Lower)
-      v4lctlSet("setattr \"Whitecrush Lower\"", std::to_string(config.Whitecrush_Lower)+"%");
+      v4lctlSet("setattr \"Whitecrush Lower\"", std::to_string(config.Whitecrush_Lower)+'%');
 
     if (config.Whitecrush_Upper != cfg_.Whitecrush_Upper)
-      v4lctlSet("setattr \"Whitecrush Upper\"", std::to_string(config.Whitecrush_Upper)+"%");
+      v4lctlSet("setattr \"Whitecrush Upper\"", std::to_string(config.Whitecrush_Upper)+'%');
 
     if (config.mute != cfg_.mute)
       v4lctlSet("setattr mute", config.mute ? "on" : "off");
