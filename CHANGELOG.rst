@@ -2,8 +2,8 @@
 Changelog for package uavc_v4lctl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.2 (2016-04-14)
+------------------
 * minor fixes
 * Contributors: uavc
 
