@@ -166,7 +166,7 @@ public:
 
     ROS_INFO_STREAM("Call '" << ss.str() << "'");
 
-    if ((result=std::system(ss.str().c_str())) > -1)
+    if ((result=std::system(ss.str().c_str()) > -1))
       fs_map_[YAML_OPT_TO_NAME(name)] = value;
 
     return result;
