@@ -194,7 +194,7 @@ public:
     std::string s;
 
 #define V4LCTL_GET_PERCENT(name,default,max) (defaults || (s=v4lctlGet(name)).empty() ? default : (atoi(s.c_str()) * 100 / max))
-#define V4LCTL_GET_BOOL(name,default)        (defaults || (s=v4lctlGet(name)).empty() ? default : boost::regex_match(s, boost::regex("^on\$")))
+#define V4LCTL_GET_BOOL(name,default)        (defaults || (s=v4lctlGet(name)).empty() ? default : boost::regex_match(s, boost::regex("^on$")))
 #define V4LCTL_GET_INT(name,default)         (defaults || (s=v4lctlGet(name)).empty() ? default : atoi(s.c_str()))
 #define V4LCTL_GET_STRING(name,default)      (defaults || (s=v4lctlGet(name)).empty() ? default : s)
 
