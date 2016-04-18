@@ -74,6 +74,7 @@
 #include <opencv2/opencv.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/regex.hpp>
+#include <iostream>
 #include <sstream>
 #include <map>
 
@@ -119,17 +120,22 @@ public:
   {
     cv::FileStorage fs;
 
-    if (!yaml_.empty() && fs.open(yaml_, cv::FileStorage::WRITE))
+    if (!yaml_.empty())
     {
-      std::map<std::string, std::string>::iterator it = fs_map_.begin();
-
-      while (it != fs_map_.end())
+      if (fs.open(yaml_, cv::FileStorage::WRITE))
       {
-        std::string key = (*it).first;
+        std::map<std::string, std::string>::iterator it = fs_map_.begin();
 
-        fs << key << fs_map_[key];
-        it++;
+        while (it != fs_map_.end())
+        {
+          std::string key = (*it).first;
+
+          fs << key << fs_map_[key];
+          it++;
+        }
       }
+      else
+        std::cerr << "Error saving config to yaml file! Check path or file permissions: " << yaml_ << std::endl;
     }
   }
 
