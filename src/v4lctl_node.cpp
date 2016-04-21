@@ -190,7 +190,7 @@ public:
       {
         cv::FileNode item = *fit;
 
-        v4lctlSet(YAML_NAME_TO_OPT(item.name()), (std::string)item);
+        v4lctlSet(YAML_NAME_TO_OPT(std::string(item.name())), (std::string)item);
       }
     }
   }
