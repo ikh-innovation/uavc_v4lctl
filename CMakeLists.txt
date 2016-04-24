@@ -132,16 +132,14 @@ include_directories(
 # add_dependencies(uavc_v4lctl ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(uavc_v4lctl_node src/uavc_v4lctl_node.cpp)
+add_executable(v4lctl src/v4lctl_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(uavc_v4lctl_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(v4lctl ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(uavc_v4lctl_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(v4lctl ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -158,11 +156,11 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS uavc_v4lctl uavc_v4lctl_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS v4lctl
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
@@ -178,6 +176,16 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  FILES_MATCHING PATTERN "*.launch"
+)
+
+install(DIRECTORY yaml/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/yaml
+  FILES_MATCHING PATTERN "*.yaml"
+)
+
 #############
 ## Testing ##
 #############
@@ -190,8 +198,4 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-add_executable(v4lctl src/v4lctl_node.cpp)
-add_dependencies(v4lctl ${PROJECT_NAME}_gencfg)
-target_link_libraries(v4lctl ${catkin_LIBRARIES})
 
