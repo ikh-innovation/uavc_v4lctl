@@ -2,14 +2,6 @@
 Changelog for package uavc_v4lctl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.5 (2016-05-14)
-------------------
-* 1.0.4
-* set install setiings
-* fix ros kinetic build error
-* extend error handling
-* Contributors: uavc
-
 1.0.3 (2016-04-17)
 ------------------
 * minor fixes
